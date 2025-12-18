@@ -117,7 +117,25 @@ class MainActivity : ComponentActivity() {
                                         "←" -> calculatorDisplay = calculatorDisplay.dropLast(1)
                                         "=" -> {
                                             for ((i, item) in calculatorDisplay.withIndex()) {
+                                                if (item in operators && i != 0 && i != calculatorDisplay.lastIndex) {
+                                                    val leftValue = calculatorDisplay[i - 1] as? Int
+                                                    val rightValue = calculatorDisplay[i + 1] as? Int
 
+                                                    if (leftValue == null || rightValue == null) {
+                                                        Log.d("Calculator", "Error: consecutive operators")
+                                                    } else {
+                                                        val calculatedValue = when (item) {
+                                                            "+" -> leftValue + rightValue
+                                                            "-" -> leftValue - rightValue
+                                                            "/" -> leftValue / rightValue
+                                                            "*" -> leftValue * rightValue
+                                                            else -> Log.d("Calculator", "Error: The value operator is not known.")
+                                                        }
+                                                        calculatorDisplay = calculatorDisplay.take(i - 1) +
+                                                                            listOf(calculatedValue) +
+                                                                            calculatorDisplay.drop(i + 2)
+                                                    }
+                                                }
                                             }
                                         }
                                         else -> {
